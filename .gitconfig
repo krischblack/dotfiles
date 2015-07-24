@@ -1,0 +1,6 @@
+[user]
+    name = Christian Schnitzer
+[push]
+    default = simple
+[http]
+    sslVerify = true
