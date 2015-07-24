@@ -17,8 +17,9 @@ alias psg="ps aux | grep -v grep | grep -i -e VSZ -e"
 alias psp="ps -ef | grep -v grep | grep -i -e VSZ -e"
 alias mkdir="mkdir -pv"
 alias myip="curl http://ipecho.net/plain; echo"
-alias dotbot="./dotfiles/install"
 alias source_bash="source ~/.bashrc"
+alias dotbot="./dotfiles/install"
+alias dotfiles='git clone https://github.com/krischblack/dotfiles.git ~/dotfiles; ~/dotfiles/install; source ~/.bashrc'
 
 alias_fill_tmp_dirs='find /etc -type d  -print 2> /dev/null |  sort > /var/tmp/dirs'
 
