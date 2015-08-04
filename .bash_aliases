@@ -28,6 +28,8 @@ alias semacs='sudo emacs -nw'
 alias e='emacs -nw'
 alias em='emacs -nw'
 alias sem='sudo emacs -nw'
+#spell correction ;-)
+alias emasc='emacs -nw'
 
 alias sl='ssh -XYC $1'
 alias sp='ssh -o PubkeyAuthentication=no $1'
@@ -43,6 +45,9 @@ alias find_pdf_mv="find . -iregex '.*\.\(pdf\|epub\)' -exec mv {} . \;"
 alias r10k_module="sudo -E r10k deploy -v debug module -e $1"
 alias r10k_module_production="sudo -E r10k deploy -v debug module -e production $1"
 alias r10k_environment="sudo r10k deploy -v debug environment $1"
+
+alias colortail='colortail -f '
+alias tail='tail -f '
 
 ### todo
 # puppet agent disable until
