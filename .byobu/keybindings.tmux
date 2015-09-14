@@ -1,6 +1,6 @@
+
+
+
+bind-key -n        F2 new-window ; rename-window -
+set -g prefix F12
 unbind-key -n C-a
-set -g prefix ^A
-set -g prefix2 ^A
-bind a send-prefix
-
-
