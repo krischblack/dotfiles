@@ -8,22 +8,26 @@
 
 (global-set-key (kbd "C-c u") 'advertised-undo)
 
-(global-set-key (kbd "C-c j") 'dired-jump)
+(global-set-key (kbd "C-c f") 'dired-jump)
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c C-c") 'comment-region)
 (global-set-key (kbd "C-c r") 'revert-buffer)
 (global-set-key (kbd "C-c l") 'goto-line)
 
+(global-set-key (kbd "C-c k") 'kill-buffer-and-window)
+
+(global-set-key (kbd "C-M-<up>") 'move-text-up)
+(global-set-key (kbd "C-M-<down>") 'move-text-down)
 
 (global-set-key (kbd "C-c C-o") 'xah-open-file-fast)
 (defvar xah-filelist nil "alist for files i need to open frequently. Key is a short abbrev, Value is file path.")
 (setq xah-filelist
       '(
         ("puppet" . "/etc/puppet/" )
-	("puppet_production" . "/etc/puppet/environments/production/" )
+				("puppet_production" . "/etc/puppet/environments/production/" )
         ("apache" . "/etc/apache2/sites-enabled" )
         ("haproxy" . "/etc/haproxy/haproxy.cfg" )
-	("home" . "~/" )
+				("home" . "~/" )
         ;; more here
 	) )
 

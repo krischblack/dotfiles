@@ -1,3 +1,6 @@
+(require 'cl)
+
+
 ;; Indentation and buffer cleanup
 ;; This re-indents, untabifies, and cleans up whitespace. It is stolen directly from the emacs-starter-kit.
 (defun untabify-buffer ()
@@ -22,13 +25,3 @@
     (replace-regexp re "" nil beg end)))
 
 
-
-(defvar def/packages '(
-                       ack
-                       auto-complete
-                       dired+
-                       puppet-mode
-                       dired-single
-		       popup
-                       )
-  "Default packages")

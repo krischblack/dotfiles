@@ -149,8 +149,10 @@ if [ -f /usr/lib/git-core/git-sh-prompt ]; then
     GIT_PS1_SHOWCOLORHINTS=1
     GIT_PS1_DESCRIBE_STYLE="branch"
     GIT_PS1_SHOWUPSTREAM="auto git"
+		
+		## http://bashrcgenerator.com/
 
-    PS1PRE="${debian_chroot:+($debian_chroot)}\\u@\[\033[38;5;214m\]\h\[\033[38;5;15m\] [\[\033[38;5;91m\]\w\[\033[38;5;15m\]]"
+    PS1PRE="\[$(tput bold)\]\[\033[38;5;160m\]\u\[$(tput sgr0)\]\[$(tput sgr0)\]\[\033[38;5;15m\]@\[\033[38;5;214m\]\h\[\033[38;5;15m\] [\[\033[38;5;91m\]\w\[\033[38;5;15m\]]"
     PS1POST=" \[\033[00m\]\[\033[1m\]\\\$\[\033[00m\] "
     PROMPT_COMMAND=${PROMPT_COMMAND}'__git_ps1 "$PS1PRE" "$PS1POST"'
 fi
