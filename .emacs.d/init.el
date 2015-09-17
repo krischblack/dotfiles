@@ -61,3 +61,6 @@
 ;; dired-jump enable
 (require 'dired-x)
 
+
+;;(add-hook 'yaml-mode-hook 'flymake-yaml-load)
+(add-hook 'after-init-hook #'global-flycheck-mode)

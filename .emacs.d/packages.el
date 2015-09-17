@@ -1,12 +1,16 @@
-(require 'cl)
-;; package mgmt
+;;; package --- MGMT
+;;; Commentary: 
+;; installs required packages 
 
+(require 'cl)
+
+;;; Code:
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-  )
+)
 
 
 (defvar prelude-packages
@@ -20,7 +24,9 @@
     iedit    
     move-text
     move-line
-    ;;tabbar
+		json-mode
+		yaml-mode
+		flycheck		
     )
   "A list of packages to ensure are installed at launch.")
 
@@ -40,3 +46,6 @@
       (package-install p))))
 
 (provide 'prelude-packages)
+
+(provide 'packages)
+;;; packages ends here
