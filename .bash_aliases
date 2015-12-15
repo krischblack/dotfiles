@@ -20,6 +20,7 @@ alias myip="curl http://ipecho.net/plain; echo"
 alias source_bash="source ~/.bashrc"
 alias dotbot="./dotfiles/install"
 alias dotfiles='git clone https://github.com/krischblack/dotfiles.git ~/dotfiles; ~/dotfiles/install; source ~/.bashrc'
+alias byobu_update_screen='/usr/lib/byobu/include/tmux-detach-all-but-current-client'
 
 #alias top10cmds="history | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n10"
 alias_fill_tmp_dirs='find /etc -type d  -print 2> /dev/null |  sort > /var/tmp/dirs'
