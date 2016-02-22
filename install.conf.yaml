@@ -23,6 +23,9 @@
     ~/.emacs.d:
       force: true
       path: .emacs.d/
+    ~/.spacemacs:
+      force: true
+      path: .spacemacs
     ~/.profile:
       force: true
       path: .profile
