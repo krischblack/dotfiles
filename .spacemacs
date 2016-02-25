@@ -25,9 +25,7 @@ values."
      ;; ----------------------------------------------------------------
      auto-completion
      better-defaults
-     emacs-lisp
      git
-     markdown
      ;; org
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -36,13 +34,10 @@ values."
      syntax-checking
      version-control
 
-     ansible
-     latex
      puppet
      python
      ruby
      shell-scripts
-     vagrant
      yaml
      )
    ;; List of additional packages that will be installed without being
@@ -95,22 +90,23 @@ values."
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
-   dotspacemacs-startup-lists '(recents projects)
+   dotspacemacs-startup-lists '(bookmarks recents projects)
    ;; Number of recent files to show in the startup buffer. Ignored if
    ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
-   dotspacemacs-startup-recent-list-size 5
+   dotspacemacs-startup-recent-list-size 10
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light
-                         solarized-light
-                         solarized-dark
-                         leuven
-                         monokai
-                         zenburn)
+                         ;; spacemacs-light
+                         ;; solarized-light
+                         ;; solarized-dark
+                         ;; leuven
+                         ;; monokai
+                         ;; zenburn
+                         )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -247,6 +243,7 @@ values."
 It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
+  (load "~/.emacs.local/init")
   )
 
 (defun dotspacemacs/user-config ()
