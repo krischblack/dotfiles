@@ -243,8 +243,12 @@ values."
 It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
-  (load "~/.emacs.local/init")
-  )
+  (when (file-exists-p "~/.emacs.local/" )
+    (when (file-exists-p "~/.emacs.local/init" )
+      (load "~/.emacs.local/init" ))
+    (when (file-exists-p "~/.emacs.local/bookmarks" )
+      ( bookmark-load "~/.emacs.local/bookmarks" t))
+))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
