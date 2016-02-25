@@ -77,7 +77,7 @@ values."
    dotspacemacs-elpa-timeout 5
    ;; If non nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. (default t)
-   dotspacemacs-check-for-update t
+   dotspacemacs-check-for-update nil
    ;; One of `vim', `emacs' or `hybrid'. Evil is always enabled but if the
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
@@ -91,7 +91,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
@@ -253,6 +253,16 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+
+  ;; Switching windows
+  (define-key input-decode-map "\e[1;10A" [C-up])
+  (define-key input-decode-map "\e[1;10B" [C-down])
+  (define-key input-decode-map "\e[1;10C" [C-right])
+  (define-key input-decode-map "\e[1;10D" [C-left])
+  (global-set-key [C-up] 'windmove-up)
+  (global-set-key [C-down] 'windmove-down)
+  (global-set-key [C-left] 'windmove-left)
+  (global-set-key [C-right] 'windmove-right)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
