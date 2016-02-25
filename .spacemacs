@@ -44,7 +44,14 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(
+      highlight-indentation
+      highlight-numbers
+      highlight-parentheses
+      iedit
+      move-text
+      neotree
+      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -248,7 +255,10 @@ in `dotspacemacs/user-config'."
       (load "~/.emacs.local/init" ))
     (when (file-exists-p "~/.emacs.local/bookmarks" )
       ( bookmark-load "~/.emacs.local/bookmarks" t))
-))
+    )
+
+
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -283,3 +293,189 @@ layers configuration. You are free to put any user code."
  ;; If there is more than one, they won't work right.
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+
+
+(defun spacemacs/init-highlight-indentation ()
+  (use-package highlight-indentation
+    :defer t
+    :init
+    (progn
+      (spacemacs|add-toggle highlight-indentation
+        :status highlight-indentation-mode
+        :on (highlight-indentation-mode)
+        :off (highlight-indentation-mode -1)
+        :documentation "Highlight indentation levels."
+        :evil-leader "thi")
+      (spacemacs|add-toggle highlight-indentation-current-column
+        :status highlight-indentation-current-column-mode
+        :on (highlight-indentation-current-column-mode)
+        :off (highlight-indentation-current-column-mode -1)
+        :documentation "Highlight indentation level at point."
+        :evil-leader "thc"))
+    :config
+    (progn
+      (spacemacs|diminish highlight-indentation-mode " ⓗi" " hi")
+      (spacemacs|diminish highlight-indentation-current-column-mode " ⓗc" " hc"))))
+
+(defun spacemacs/init-highlight-numbers ()
+  (use-package highlight-numbers
+    :defer t
+    :init
+    (progn
+      (add-hook 'prog-mode-hook 'highlight-numbers-mode)
+      (add-hook 'asm-mode-hook (lambda () (highlight-numbers-mode -1))))))
+
+(defun spacemacs/init-highlight-parentheses ()
+  (use-package highlight-parentheses
+    :defer t
+    :init
+    (progn
+      (when (member dotspacemacs-highlight-delimiters '(all current))
+        (add-hook 'prog-mode-hook #'highlight-parentheses-mode))
+      (setq hl-paren-delay 0.2)
+      (spacemacs/set-leader-keys "tCp" 'highlight-parentheses-mode)
+      (setq hl-paren-colors '("Springgreen3"
+                              "IndianRed1"
+                              "IndianRed3"
+                              "IndianRed4")))
+    :config
+    (spacemacs|hide-lighter highlight-parentheses-mode)
+    (set-face-attribute 'hl-paren-face nil :weight 'ultra-bold)))
+
+(defun spacemacs/init-iedit ()
+  (use-package iedit
+    :defer t
+    :init
+    (progn
+      (setq iedit-current-symbol-default t
+            iedit-only-at-symbol-boundaries t
+            iedit-toggle-key-default nil))
+    :config
+    (progn
+      (defun iedit-toggle-selection ()
+        "Override default iedit function to be able to add arbitrary overlays.
+
+It will toggle the overlay under point or create an overlay of one character."
+        (interactive)
+        (iedit-barf-if-buffering)
+        (let ((ov (iedit-find-current-occurrence-overlay)))
+          (if ov
+              (iedit-restrict-region (overlay-start ov) (overlay-end ov) t)
+            (save-excursion
+              (push (iedit-make-occurrence-overlay (point) (1+ (point)))
+                    iedit-occurrences-overlays))
+            (setq iedit-mode
+                  (propertize
+                   (concat " Iedit:" (number-to-string
+                                      (length iedit-occurrences-overlays)))
+                   'face 'font-lock-warning-face))
+            (force-mode-line-update)))))))
+
+(defun spacemacs/init-move-text ()
+  (use-package move-text
+    :defer t
+    :init
+    (spacemacs|define-micro-state move-text
+      :doc "[J] move down [K] move up"
+        :use-minibuffer t
+      :execute-binding-on-enter t
+      :evil-leader "xJ" "xK"
+      :bindings
+      ("J" move-text-down)
+      ("K" move-text-up))))
+
+(defun spacemacs/init-neotree ()
+  (use-package neotree
+    :defer t
+    :commands neo-global--window-exists-p
+    :init
+    (progn
+      (setq neo-window-width 32
+            neo-create-file-auto-open t
+            neo-banner-message nil
+            neo-show-updir-line nil
+            neo-mode-line-type 'neotree
+            neo-smart-open t
+            neo-dont-be-alone t
+            neo-persist-show nil
+            neo-show-hidden-files t
+            neo-auto-indent-point t
+            neo-modern-sidebar t
+            neo-vc-integration nil
+            neo-window-position 'right)
+
+      (defun spacemacs/neotree-expand-or-open ()
+        "Collapse a neotree node."
+        (interactive)
+        (let ((node (neo-buffer--get-filename-current-line)))
+          (when node
+            (if (file-directory-p node)
+                (progn
+                  (neo-buffer--set-expand node t)
+                  (neo-buffer--refresh t)
+                  (when neo-auto-indent-point
+                    (next-line)
+                    (neo-point-auto-indent)))
+              (call-interactively 'neotree-enter)))))
+
+      (defun spacemacs/neotree-collapse ()
+        "Collapse a neotree node."
+        (interactive)
+        (let ((node (neo-buffer--get-filename-current-line)))
+          (when node
+            (when (file-directory-p node)
+              (neo-buffer--set-expand node nil)
+              (neo-buffer--refresh t))
+            (when neo-auto-indent-point
+              (neo-point-auto-indent)))))
+
+      (defun spacemacs/neotree-collapse-or-up ()
+        "Collapse an expanded directory node or go to the parent node."
+        (interactive)
+        (let ((node (neo-buffer--get-filename-current-line)))
+          (when node
+            (if (file-directory-p node)
+                (if (neo-buffer--expanded-node-p node)
+                    (spacemacs/neotree-collapse)
+                  (neotree-select-up-node))
+              (neotree-select-up-node)))))
+
+      (defun neotree-find-project-root ()
+        (interactive)
+        (if (neo-global--window-exists-p)
+            (neotree-hide)
+          (let ((origin-buffer-file-name (buffer-file-name)))
+            (neotree-find (projectile-project-root))
+            (neotree-find origin-buffer-file-name))))
+
+      (defun spacemacs//neotree-key-bindings ()
+        "Set the key bindings for a neotree buffer."
+        (evilified-state-evilify-map neotree-mode-map
+          :mode neotree-mode
+          :bindings
+          (kbd "TAB")  'neotree-stretch-toggle
+          (kbd "RET") 'neotree-enter
+          (kbd "|") 'neotree-enter-vertical-split
+          (kbd "-") 'neotree-enter-horizontal-split
+          (kbd "?") 'evil-search-backward
+          (kbd "c") 'neotree-create-node
+          (kbd "d") 'neotree-delete-node
+          (kbd "gr") 'neotree-refresh
+          (kbd "h") 'spacemacs/neotree-collapse-or-up
+          (kbd "H") 'neotree-select-previous-sibling-node
+          (kbd "J") 'neotree-select-down-node
+          (kbd "K") 'neotree-select-up-node
+          (kbd "l") 'spacemacs/neotree-expand-or-open
+          (kbd "L") 'neotree-select-next-sibling-node
+          (kbd "q") 'neotree-hide
+          (kbd "r") 'neotree-rename-node
+          (kbd "R") 'neotree-change-root
+          (kbd "s") 'neotree-hidden-file-toggle))
+
+      (spacemacs/set-leader-keys
+        "ft" 'neotree-toggle
+        "pt" 'neotree-find-project-root))
+
+    :config
+    (spacemacs//neotree-key-bindings)))
+
