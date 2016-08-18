@@ -25,6 +25,9 @@ alias byobu_update_screen='/usr/lib/byobu/include/tmux-detach-all-but-current-cl
 #alias top10cmds="history | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n10"
 alias_fill_tmp_dirs='find /etc -type d  -print 2> /dev/null |  sort > /var/tmp/dirs'
 
+if [ -f /usr/bin/emacs-snapshot ]; then
+  alias emacs='emacs-snapshot'
+fi
 alias semacs='sudo emacs -nw'
 alias e='emacs -nw'
 alias em='emacs -nw'

@@ -101,8 +101,14 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
+if [ -f ~/.bash_aliases_local ]; then
+    . ~/.bash_aliases_local
+fi
 if [ -f ~/.bash_functions ]; then
     . ~/.bash_functions
+fi
+if [ -f ~/.bash_functions_local ]; then
+    . ~/.bash_functions_local
 fi
 
 # enable programmable completion features (you don't need to enable
@@ -131,6 +137,7 @@ shopt -s histappend
 export EDITOR=/usr/bin/emacs
 export VISUAL=/usr/bin/emacs
 export SUDO_EDITOR=/usr/bin/emacs
+export PATH=$PATH:~/bin
 
 # Set tmux or screen window title to short hostname
 case "$TERM" in
