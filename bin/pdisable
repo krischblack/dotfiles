@@ -1,0 +1,119 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'bundler/setup'
+
+require 'optparse'
+
+R = /(?<diff>\d+)(?<format>['m'|'h'|'d'|'M'|'Y'])/
+verbose           = false
+interactive       = false
+
+# parse arguments
+file = __FILE__
+OptionParser.new do |opts|
+  opts.banner = "Usage: (sudo) pdisable [options]"
+
+  opts.on("-d VALUE", "--diff-time",
+          "time difference since now") do |ext|
+    if !(ext !~ R)
+      Diff = ext.match(R)
+      Num = Diff["diff"]
+      Format = Diff["format"]
+    else
+      puts opts
+      exit
+    end
+  end
+  opts.on("-u VALUE" , "--until", "date until value, needs to be in the format YYYYMMDDHHmm")      { |v| D = v }
+  opts.on("-m VALUE" , "--message", "Message for the agent disable state")                         { |v| Message = v }
+  opts.separator ""
+  opts.separator "Common options:"
+  opts.on("-v" , "--verbose", "verbose (default: false)")                                          { verbose = true }
+  opts.on("-i" , "--interactive", "interactive (irb) (default: false)")                            { interactive = true }
+  opts.on('-h', '--help', "help page, this page")                                                  { puts opts; exit }
+  opts.parse!
+end
+
+def calcEndTime( n, format )
+  case format
+  when 'm'
+    return Time.now  + n * 60
+  when 'h'
+    return Time.now  + n * 60*60
+  when 'd'
+    return Time.now  + n * 60*60*24
+  when 'M'
+    return Time.now  + n * 60*60*24*30
+  when 'Y'
+    return Time.now  + n * 60*60*24*365
+  end
+  return nil
+end
+
+def formatTime( t )
+  return t.strftime("%Y%m%d%H%M")
+end
+
+def formatMessage( m, t )
+  f = formatTime t
+  return "#{m} - until #{f}"
+end
+
+def check_puppet_state()
+  file_name = "/var/lib/puppet/state/agent_disabled.lock"
+  if !File.file?(file_name)
+    return false
+  end
+  require 'json'
+  return JSON.parse(File.read(file_name))['disabled_message']
+end
+
+def disablePuppet( m, t )
+  message = formatMessage m, t
+  cmd = "puppet agent --disable \"#{message}\""
+  `#{cmd}`
+
+  if message == check_puppet_state
+    puts "Puppet is disabled with message: #{message}"
+    exit 0
+  else
+    puts "puppet disable didn't work out, Message supplied differs from message specified here"
+    exit 1
+  end
+end
+
+
+
+### Main code here
+if ENV['USER'] != "root"
+  puts "Need to be root"
+  exit
+end
+
+check = check_puppet_state
+if check then
+  puts "puppet already disabled with message: #{check}"
+  exit
+end
+
+if (!defined?(Num) && !defined?(Format)) && defined?(D)
+  puts "cannot use simply format and until date value"
+  puts opts
+  exit
+end
+
+# everything is fine, ready to go
+if !defined?(Num) && !defined?(Format)
+  Num = 1
+  Format = 'd'
+end
+
+if !defined?(Message)
+  Message = "Puppet disabled by admin"
+end
+
+time = calcEndTime(Num.to_i, Format)
+
+disablePuppet(Message, time)
+
